@@ -1,0 +1,63 @@
+backend/
+  ├── app/
+  │   ├── __init__.py
+  │   ├── main.py                 # FastAPI 入口，挂载路由/中间件
+  │   ├── core/                   # 核心基础设施
+  │   │   ├── config.py           # 环境变量、配置（pydantic-settings）
+  │   │   ├── security.py         # 认证、JWT、CORS
+  │   │   ├── logging.py          # 日志配置
+  │   │   └── exceptions.py       # 自定义异常
+  │   ├── api/                    # 路由层（只做请求响应，不含业务）
+  │   │   ├── deps.py             # 依赖注入（DB session、当前用户）
+  │   │   └── v1/
+  │   │       ├── router.py       # v1 总路由
+  │   │       └── endpoints/
+  │   │           ├── ocr.py      # OCR 识别接口
+  │   │           ├── files.py    # 文件上传/下载
+  │   │           └── tasks.py    # 异步任务状态查询
+  │   ├── schemas/                # Pydantic 模型（请求/响应 DTO）
+  │   │   ├── ocr.py              # OCRRequest, BoundingBox, OCRResult
+  │   │   ├── file.py
+  │   │   └── task.py
+  │   ├── models/                 # SQLAlchemy ORM 模型（数据库表）
+  │   │   ├── base.py
+  │   │   ├── file.py
+  │   │   └── ocr_record.py
+  │   ├── db/                     # 数据库连接
+  │   │   ├── session.py          # engine、SessionLocal
+  │   │   ├── base.py
+  │   │   └── init_db.py
+  │   ├── crud/                   # 数据库增删改查（Repository 层）
+  │   │   ├── base.py
+  │   │   ├── file.py
+  │   │   └── ocr_record.py
+  │   ├── services/               # 业务逻辑层（编排 crud + 外部服务）
+  │   │   ├── ocr_service.py      # 调用大模型、合并结果
+  │   │   ├── file_service.py     # 文件存储、格式校验
+  │   │   └── pdf_service.py      # PDF 拆页、渲染
+  │   ├── ml/                     # 大模型 / OCR 引擎封装
+  │   │   ├── base.py             # 抽象接口，便于切换模型
+  │   │   ├── vlm_client.py       # 视觉大模型客户端（GPT-4V/Qwen-VL 等）
+  │   │   ├── ocr_engine.py       # PaddleOCR/Tesseract 等传统 OCR
+  │   │   └── coord_utils.py      # 坐标归一化、bbox 计算
+  │   ├── workers/                # 异步任务（Celery/RQ/arq）
+  │   │   ├── celery_app.py
+  │   │   └── tasks.py
+  │   └── utils/                  # 通用工具
+  │       ├── image.py
+  │       └── storage.py          # S3/MinIO/本地存储抽象
+  ├── alembic/                    # 数据库迁移
+  │   ├── versions/
+  │   └── env.py
+  ├── tests/
+  │   ├── conftest.py
+  │   ├── api/
+  │   ├── services/
+  │   └── ml/
+  ├── scripts/                    # 运维脚本（初始化、数据导入）
+  ├── storage/                    # 本地上传文件目录（开发时用，.gitignore）
+  ├── .env.example
+  ├── alembic.ini
+  ├── pyproject.toml              # 或 requirements.txt
+  ├── Dockerfile
+  └── README.md
