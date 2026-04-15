@@ -1,4 +1,4 @@
-# GenReader
+# Gen
 
 > AI-driven PDF / image text recognition & coordinate localization, powered by vision-language models (Qwen-VL).
 
